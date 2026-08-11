@@ -1,4 +1,6 @@
-import { workshops } from "../data/workshops";
+import { useCallback, useState } from "react";
+
+import { workshops as initialWorkshops } from "../data/workshops";
 import { sponsors } from "../data/sponsors";
 import { registrations } from "../data/registrations";
 import WorkshopTable from "../components/workshops/WorkshopTable";
@@ -9,9 +11,31 @@ import AlertBar from "../components/notifications/AlertBar";
 import MetricsGrid from "../components/dashboard/MetricsGrid";
 
 const Dashboard = () => {
-  const totalWorkshops = workshops.length;
+  const [workshopList, setWorkshopList] = useState(initialWorkshops);
+
+  const totalWorkshops = workshopList.length;
   const totalSponsors = sponsors.length;
   const totalAttendees = registrations.length;
+
+  const updateWorkshop = useCallback((workshopId, updates) => {
+    setWorkshopList((current) =>
+      current.map((workshop) =>
+        workshop.id === workshopId
+          ? { ...workshop, ...updates }
+          : workshop,
+      ),
+    );
+  }, []);
+
+  const markWorkshopCompleted = useCallback((workshopId) => {
+    setWorkshopList((current) =>
+      current.map((workshop) =>
+        workshop.id === workshopId
+          ? { ...workshop, status: "Completed" }
+          : workshop,
+      ),
+    );
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-slate-50">
@@ -45,14 +69,19 @@ const Dashboard = () => {
             </section>
 
             <MetricsGrid
-              workshops={workshops}
+              workshops={workshopList}
               totalWorkshops={totalWorkshops}
               totalSponsors={totalSponsors}
               totalAttendees={totalAttendees}
             />
 
             <div className="mt-8">
-              <WorkshopTable workshops={workshops} sponsors={sponsors} />
+              <WorkshopTable
+                workshops={workshopList}
+                sponsors={sponsors}
+                onUpdateWorkshop={updateWorkshop}
+                onMarkCompleted={markWorkshopCompleted}
+              />
             </div>
           </div>
         </main>
