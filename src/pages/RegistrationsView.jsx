@@ -116,6 +116,7 @@ const generateRegistrationId = (registrationCount) => {
 };
 
 const STEPS = [
+  { label: "Personal Info" },
   { label: "Select Workshop" },
   { label: "Confirm" },
 ];

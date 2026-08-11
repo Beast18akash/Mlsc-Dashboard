@@ -38,28 +38,25 @@ const Dashboard = ({ activeView, onNavigate }) => {
 
   const updateWorkshop = useCallback((workshopId, updates) => {
     setWorkshopList((current) =>
-      current.map((w) =>
-        w.id === workshopId ? { ...w, ...updates } : w,
-      ),
+      current.map((w) => w.id === workshopId ? { ...w, ...updates } : w),
     );
   }, []);
 
   const markWorkshopCompleted = useCallback((workshopId) => {
     setWorkshopList((current) =>
-      current.map((w) =>
-        w.id === workshopId ? { ...w, status: "Completed" } : w,
-      ),
+      current.map((w) => w.id === workshopId ? { ...w, status: "Completed" } : w),
     );
   }, []);
 
   // ── Registration state (Feature 6) ────────────────────────────────────────
-  // Initialised from registrations.js but never mutates that file.
-  // New registrations are appended immutably so the attendee count stays live.
   const [registrationList, setRegistrationList] = useState(initialRegistrations);
 
   const addRegistration = useCallback((registration) => {
     setRegistrationList((current) => [...current, registration]);
   }, []);
+
+  // ── Mobile navigation state ───────────────────────────────────────────────
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // ── Derived metrics ───────────────────────────────────────────────────────
   const totalWorkshops = workshopList.length;
@@ -78,10 +75,19 @@ const Dashboard = ({ activeView, onNavigate }) => {
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
-      <Sidebar activeView={activeView} onNavigate={onNavigate} />
+      <Sidebar
+        activeView={activeView}
+        onNavigate={onNavigate}
+        isMobileOpen={isMobileNavOpen}
+        onMobileClose={() => setIsMobileNavOpen(false)}
+      />
 
       <div className="min-w-0 flex-1">
-        <Header activeView={activeView} onNavigate={onNavigate} />
+        <Header
+          activeView={activeView}
+          onNavigate={onNavigate}
+          onMobileMenuOpen={() => setIsMobileNavOpen(true)}
+        />
 
         <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950 sm:px-6 lg:px-8">
           <AlertBar />

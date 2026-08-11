@@ -96,9 +96,9 @@ const RegistrationPass = ({ registration, workshop, sponsor, onRegisterAnother }
 
         {/* Registration ID row */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-dashed border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/40">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-medium text-slate-400 dark:text-slate-500">Registration ID</p>
-            <p className="mt-0.5 font-mono text-base font-bold tracking-wide text-slate-900 dark:text-slate-100" aria-label={`Registration ID: ${registration.id}`}>
+            <p className="mt-0.5 break-all font-mono text-base font-bold tracking-wide text-slate-900 dark:text-slate-100" aria-label={`Registration ID: ${registration.id}`}>
               {registration.id}
             </p>
           </div>
@@ -149,11 +149,11 @@ const RegistrationPass = ({ registration, workshop, sponsor, onRegisterAnother }
 
         {/* Footer */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/40">
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+          <p className="text-xs text-slate-400 dark:text-slate-500 sm:order-first">
             Issued <span className="font-medium text-slate-600 dark:text-slate-300">{formatDate(registration.registeredAt)}</span>
           </p>
           <button type="button" onClick={handleDownload}
-            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 sm:w-auto">
             <Download size={14} aria-hidden="true" />
             Download Pass
           </button>
