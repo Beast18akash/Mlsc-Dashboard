@@ -74,8 +74,8 @@ const StepConfirmation = ({ formData, workshop, sponsor, onConfirm, onBack, isSu
           Back
         </button>
         <button type="button" onClick={onConfirm} disabled={isSubmitting}
-          className="rounded-lg bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
-          {isSubmitting ? "Registering…" : "Confirm Registration"}
+          className="btn-gradient-cta px-6 py-2.5 text-sm disabled:opacity-40">
+          <span>{isSubmitting ? "Registering…" : "Confirm Registration"}</span>
         </button>
       </div>
     </div>

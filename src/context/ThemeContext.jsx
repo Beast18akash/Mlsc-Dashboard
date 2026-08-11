@@ -30,9 +30,9 @@ export const ThemeProvider = ({ children }) => {
     } catch {
       // localStorage unavailable
     }
-    // Default to light — the flash-prevention script handles the case
-    // where the user had previously saved "dark".
-    return "light";
+    // Default to dark — the flash-prevention script in index.html applies
+    // the "dark" class immediately on first load before React hydrates.
+    return "dark";
   });
 
   // Keep <html> class in sync with React state

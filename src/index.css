@@ -6,3 +6,248 @@
   This is set/removed programmatically by ThemeContext.jsx.
 */
 @variant dark (&:where(.dark, .dark *));
+
+/* ─── Animated gradient CTA button ──────────────────────────────────────────
+ *
+ * Usage:  <button className="btn-gradient-cta px-5 py-2.5 text-sm font-semibold">
+ *
+ * Effect: a thin conic-gradient border rotates continuously around the button.
+ *         A subtle translucent shine sweeps across on hover.
+ *         Slight scale-up on hover, scale-back on press.
+ *         Respects prefers-reduced-motion.
+ *
+ * Palette: cool navy/indigo/sky — matches the existing MLSC blue UI.
+ *          No bright rainbow; gradient stays in the blue-indigo-violet range.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+@property --grad-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spin-border {
+  to { --grad-angle: 360deg; }
+}
+
+@keyframes shine-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%)  skewX(-15deg); }
+}
+
+.btn-gradient-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.625rem;
+  font-weight: 600;
+  color: #ffffff;                    /* always white — readable on dark face  */
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  background:
+    conic-gradient(
+      from var(--grad-angle),
+      #0ea5e9 0%,
+      #6366f1 25%,
+      #8b5cf6 50%,
+      #6366f1 75%,
+      #0ea5e9 100%
+    );
+  animation: spin-border 4s linear infinite;
+
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.25),
+    0 2px 8px  rgba(99, 102, 241, 0.20),
+    0 0  20px  rgba(14, 165, 233, 0.10);
+}
+
+/* Inner face — sits behind the text. z-index: 0 so text at default flow is on top */
+.btn-gradient-cta::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 0.5rem;
+  background: #0f172a;
+  z-index: 0;
+  transition: background 150ms ease;
+}
+
+/* Shine sweep — above face (1), below text (2) */
+.btn-gradient-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.10) 50%,
+    transparent 60%
+  );
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+/* All direct children (icons, spans) — above shine */
+.btn-gradient-cta > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Text nodes have no position, but since ::before is z-index:0 and the button
+   itself is a new stacking context via isolation:isolate, in-flow content
+   (text nodes) naturally paints above z-index:0 pseudo-elements. */
+
+/* Hover — scale up, stronger glow, trigger shine */
+.btn-gradient-cta:hover {
+  transform: scale(1.025);
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.40),
+    0 4px 16px rgba(99, 102, 241, 0.30),
+    0 0  28px  rgba(14, 165, 233, 0.18);
+}
+.btn-gradient-cta:hover::after {
+  opacity: 1;
+  animation: shine-sweep 600ms ease forwards;
+}
+
+/* Active — scale back to confirm press */
+.btn-gradient-cta:active {
+  transform: scale(0.975);
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.20),
+    0 1px 4px  rgba(99, 102, 241, 0.15);
+}
+
+/* Disabled — stop animation, mute everything */
+.btn-gradient-cta:disabled {
+  animation: none;
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Focus-visible — keyboard ring outside the gradient border */
+.btn-gradient-cta:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+}
+
+/* Dark mode — face stays the same (already dark), glow subtly adjusted */
+:where(.dark, .dark *) .btn-gradient-cta::before {
+  background: #0f172a;
+}
+
+/* Reduced motion — keep button, kill spin + shine */
+@media (prefers-reduced-motion: reduce) {
+  .btn-gradient-cta {
+    animation: none;
+    /* Static gradient snapshot instead of spinning */
+    background: linear-gradient(135deg, #0ea5e9, #6366f1, #8b5cf6);
+  }
+  .btn-gradient-cta:hover::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ─── Premium Workshop Card Glow Effects ────────────────────────────────────
+ *
+ * Subtle radial gradient glows for workshop cards based on status.
+ * These create the premium corner-glow effect seen in the reference design.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.card-glow-upcoming {
+  background: radial-gradient(
+    circle at center,
+    rgba(30, 58, 138, 1) 0%,
+    rgba(29, 78, 216, 1) 20%,
+    rgba(37, 99, 235, 0.9) 40%,
+    rgba(59, 130, 246, 0.6) 60%,
+    transparent 80%
+  );
+}
+
+.dark .card-glow-upcoming {
+  background: radial-gradient(
+    circle at center,
+    rgba(49, 46, 129, 1) 0%,
+    rgba(55, 48, 163, 1) 20%,
+    rgba(67, 56, 202, 1) 40%,
+    rgba(79, 70, 229, 0.8) 60%,
+    transparent 80%
+  );
+}
+
+.card-glow-ongoing {
+  background: radial-gradient(
+    circle at center,
+    rgba(19, 78, 74, 1) 0%,
+    rgba(15, 118, 110, 1) 20%,
+    rgba(13, 148, 136, 0.95) 40%,
+    rgba(20, 184, 166, 0.7) 60%,
+    transparent 80%
+  );
+}
+
+.card-glow-completed {
+  background: radial-gradient(
+    circle at center,
+    rgba(30, 41, 59, 1) 0%,
+    rgba(51, 65, 85, 1) 20%,
+    rgba(71, 85, 105, 0.9) 40%,
+    rgba(100, 116, 139, 0.6) 60%,
+    transparent 80%
+  );
+}
+
+/* Hover intensity - even darker */
+.group:hover .card-glow-upcoming {
+  background: radial-gradient(
+    circle at center,
+    rgba(23, 37, 84, 1) 0%,
+    rgba(30, 58, 138, 1) 20%,
+    rgba(29, 78, 216, 1) 40%,
+    rgba(37, 99, 235, 0.8) 60%,
+    transparent 80%
+  );
+}
+
+.dark .group:hover .card-glow-upcoming {
+  background: radial-gradient(
+    circle at center,
+    rgba(35, 35, 90, 1) 0%,
+    rgba(49, 46, 129, 1) 20%,
+    rgba(55, 48, 163, 1) 40%,
+    rgba(67, 56, 202, 1) 60%,
+    transparent 80%
+  );
+}
+
+.group:hover .card-glow-ongoing {
+  background: radial-gradient(
+    circle at center,
+    rgba(13, 55, 53, 1) 0%,
+    rgba(19, 78, 74, 1) 20%,
+    rgba(15, 118, 110, 1) 40%,
+    rgba(13, 148, 136, 0.9) 60%,
+    transparent 80%
+  );
+}
+
+.group:hover .card-glow-completed {
+  background: radial-gradient(
+    circle at center,
+    rgba(15, 23, 42, 1) 0%,
+    rgba(30, 41, 59, 1) 20%,
+    rgba(51, 65, 85, 1) 40%,
+    rgba(71, 85, 105, 0.8) 60%,
+    transparent 80%
+  );
+}

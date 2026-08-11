@@ -153,9 +153,9 @@ const RegistrationPass = ({ registration, workshop, sponsor, onRegisterAnother }
             Issued <span className="font-medium text-slate-600 dark:text-slate-300">{formatDate(registration.registeredAt)}</span>
           </p>
           <button type="button" onClick={handleDownload}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 sm:w-auto">
+            className="btn-gradient-cta w-full px-3 py-2 text-sm sm:w-auto">
             <Download size={14} aria-hidden="true" />
-            Download Pass
+            <span>Download Pass</span>
           </button>
         </div>
       </article>

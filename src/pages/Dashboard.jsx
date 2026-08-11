@@ -12,6 +12,7 @@ import Sidebar from "../components/Layout/Sidebar";
 import Header from "../components/Layout/Header";
 import AlertBar from "../components/notifications/AlertBar";
 import MetricsGrid from "../components/dashboard/MetricsGrid";
+import AuroraBackground from "../components/ui/AuroraBackground";
 
 /**
  * Dashboard
@@ -94,7 +95,8 @@ const Dashboard = ({ activeView, onNavigate }) => {
         </div>
 
         <main className="p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
+          <AuroraBackground className="min-h-[calc(100vh-5rem)]">
+            <div className="mx-auto max-w-7xl">
 
             {/* ── Dashboard overview ──────────────────────────────────── */}
             {activeView === "dashboard" && (
@@ -153,7 +155,8 @@ const Dashboard = ({ activeView, onNavigate }) => {
               />
             )}
 
-          </div>
+            </div>
+          </AuroraBackground>
         </main>
       </div>
     </div>

@@ -1,9 +1,15 @@
+import CustomSelect from "../common/CustomSelect";
+
 const YEAR_OPTIONS = ["1st Year","2nd Year","3rd Year","4th Year","Postgraduate"];
 const DEPARTMENT_OPTIONS = [
   "Computer Science","Information Technology","Electronics & Communication",
   "Electrical Engineering","Mechanical Engineering","Civil Engineering",
   "Chemical Engineering","Biotechnology","Mathematics","Physics","Other",
 ];
+
+// Transform string arrays into { value, label } format for CustomSelect
+const yearOptions = YEAR_OPTIONS.map((year) => ({ value: year, label: year }));
+const departmentOptions = DEPARTMENT_OPTIONS.map((dept) => ({ value: dept, label: dept }));
 
 const labelClass = "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5";
 const inputBase  = "w-full rounded-lg border px-3 py-2.5 text-sm shadow-sm transition-colors placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:placeholder:text-slate-400";
@@ -57,12 +63,16 @@ const StepPersonalInfo = ({ formData, onChange, onNext, errors }) => (
         <label htmlFor="reg-year" className={labelClass}>
           Year of Study <span className="text-red-500" aria-hidden="true">*</span>
         </label>
-        <select id="reg-year" value={formData.year} onChange={(e) => onChange("year", e.target.value)}
-          aria-required="true" aria-describedby={errors.year ? "reg-year-error" : undefined}
-          className={`${inputBase} ${errors.year ? inputError : inputNormal}`}>
-          <option value="">Select year…</option>
-          {YEAR_OPTIONS.map((y) => <option key={y} value={y}>{y}</option>)}
-        </select>
+        <CustomSelect
+          id="reg-year"
+          value={formData.year}
+          onChange={(value) => onChange("year", value)}
+          options={yearOptions}
+          placeholder="Select year…"
+          hasError={!!errors.year}
+          ariaRequired={true}
+          ariaDescribedby={errors.year ? "reg-year-error" : undefined}
+        />
         {errors.year && <p id="reg-year-error" role="alert" className={errorClass}>{errors.year}</p>}
       </div>
 
@@ -71,20 +81,23 @@ const StepPersonalInfo = ({ formData, onChange, onNext, errors }) => (
         <label htmlFor="reg-dept" className={labelClass}>
           Department <span className="text-red-500" aria-hidden="true">*</span>
         </label>
-        <select id="reg-dept" value={formData.department} onChange={(e) => onChange("department", e.target.value)}
-          aria-required="true" aria-describedby={errors.department ? "reg-dept-error" : undefined}
-          className={`${inputBase} ${errors.department ? inputError : inputNormal}`}>
-          <option value="">Select department…</option>
-          {DEPARTMENT_OPTIONS.map((d) => <option key={d} value={d}>{d}</option>)}
-        </select>
+        <CustomSelect
+          id="reg-dept"
+          value={formData.department}
+          onChange={(value) => onChange("department", value)}
+          options={departmentOptions}
+          placeholder="Select department…"
+          hasError={!!errors.department}
+          ariaRequired={true}
+          ariaDescribedby={errors.department ? "reg-dept-error" : undefined}
+        />
         {errors.department && <p id="reg-dept-error" role="alert" className={errorClass}>{errors.department}</p>}
       </div>
     </div>
 
     <div className="mt-8 flex justify-end">
-      <button type="button" onClick={onNext}
-        className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
-        Next: Select Workshop
+      <button type="button" onClick={onNext} className="btn-gradient-cta px-5 py-2.5 text-sm">
+        <span>Next: Select Workshop</span>
       </button>
     </div>
   </div>

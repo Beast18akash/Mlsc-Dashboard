@@ -15,7 +15,8 @@
       (function () {
         try {
           var saved = localStorage.getItem("mlsc-theme");
-          if (saved === "dark") {
+          // Default is dark — only switch to light if the user explicitly saved "light"
+          if (saved !== "light") {
             document.documentElement.classList.add("dark");
           }
         } catch (e) {}
