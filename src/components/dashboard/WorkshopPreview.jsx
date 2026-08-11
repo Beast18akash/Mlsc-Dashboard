@@ -28,22 +28,22 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
         return {
           glowClass: "card-glow-ongoing",
           border: "border-teal-500/20 dark:border-teal-400/30",
-          progress: "bg-gradient-to-r from-teal-400 to-emerald-400",
-          progressBg: "bg-slate-700/50 dark:bg-slate-800/50",
+          progress: "bg-gradient-to-r from-teal-500 to-emerald-500",
+          progressBg: "bg-slate-200 dark:bg-slate-700/50",
         };
       case "Completed":
         return {
           glowClass: "card-glow-completed",
           border: "border-slate-500/20 dark:border-slate-400/20",
-          progress: "bg-gradient-to-r from-slate-400 to-slate-500",
-          progressBg: "bg-slate-700/50 dark:bg-slate-800/50",
+          progress: "bg-gradient-to-r from-slate-500 to-slate-600",
+          progressBg: "bg-slate-200 dark:bg-slate-700/50",
         };
       default: // Upcoming
         return {
           glowClass: "card-glow-upcoming",
           border: "border-blue-500/20 dark:border-indigo-400/30",
-          progress: "bg-gradient-to-r from-blue-400 to-indigo-400",
-          progressBg: "bg-slate-700/50 dark:bg-slate-800/50",
+          progress: "bg-gradient-to-r from-blue-500 to-indigo-500",
+          progressBg: "bg-slate-200 dark:bg-slate-700/50",
         };
     }
   };
@@ -53,10 +53,9 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
       {/* Section header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Upcoming Workshops</h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {totalActive} active workshop{totalActive !== 1 ? "s" : ""} —{" "}
-            showing the next {Math.min(PREVIEW_LIMIT, previewWorkshops.length)}
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Upcoming Workshops</h2>
+          <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400">
+            {totalActive} active workshop{totalActive !== 1 ? "s" : ""} — showing the next {Math.min(PREVIEW_LIMIT, previewWorkshops.length)}
           </p>
         </div>
         <button
@@ -97,12 +96,12 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
             return (
               <article
                 key={workshop.id}
-                className={`group relative overflow-hidden rounded-2xl border bg-slate-50 shadow-xl transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl dark:bg-slate-900/95 ${accent.border}`}
+                className={`group relative overflow-hidden rounded-2xl border bg-white shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-xl dark:bg-slate-900/95 dark:shadow-2xl ${accent.border}`}
                 aria-label={workshop.title}
               >
                 {/* Corner glow effect */}
                 <div
-                  className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-60 ${accent.glowClass}`}
+                  className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-25 blur-3xl transition-opacity duration-300 group-hover:opacity-40 dark:opacity-40 dark:group-hover:opacity-60 ${accent.glowClass}`}
                   aria-hidden="true"
                 />
 
@@ -198,7 +197,7 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
                   </div>
 
                   {/* Footer */}
-                  <div className="border-t border-slate-200/50 bg-slate-100/50 px-4 py-2.5 backdrop-blur-sm dark:border-slate-800/50 dark:bg-slate-800/30">
+                  <div className="border-t border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-800/50 dark:bg-slate-800/30">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-slate-900 dark:text-white">
                         {workshop.seatsFilled}/{workshop.capacity}
@@ -207,7 +206,7 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
                         className={`font-medium ${
                           isFull
                             ? "text-red-600 dark:text-red-400"
-                            : "text-slate-500 dark:text-slate-400"
+                            : "text-slate-600 dark:text-slate-400"
                         }`}
                       >
                         {isFull ? "Full" : `${seatsRemaining} left`}

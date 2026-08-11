@@ -28,6 +28,9 @@ const MetricsGrid = ({
         description="Workshops this semester"
         icon={CalendarDays}
         animate
+        glowClass="metric-glow-workshops"
+        borderClass="border-blue-500/20 dark:border-indigo-400/30"
+        iconGlowClass="metric-glow-workshops"
       />
 
       <MetricCard
@@ -36,6 +39,9 @@ const MetricsGrid = ({
         description="Active sponsors"
         icon={Handshake}
         animate
+        glowClass="metric-glow-sponsors"
+        borderClass="border-violet-500/20 dark:border-purple-400/30"
+        iconGlowClass="metric-glow-sponsors"
       />
 
       <MetricCard
@@ -44,6 +50,9 @@ const MetricsGrid = ({
         description="Total registrations"
         icon={Users}
         animate
+        glowClass="metric-glow-attendees"
+        borderClass="border-teal-500/20 dark:border-cyan-400/30"
+        iconGlowClass="metric-glow-attendees"
       />
 
       <MetricCard
@@ -52,6 +61,9 @@ const MetricsGrid = ({
         description={countdownDescription}
         icon={Clock3}
         valueLabel="Countdown to the next upcoming workshop"
+        glowClass="metric-glow-countdown"
+        borderClass="border-indigo-500/25 dark:border-indigo-400/35"
+        iconGlowClass="metric-glow-countdown"
       />
     </section>
   );

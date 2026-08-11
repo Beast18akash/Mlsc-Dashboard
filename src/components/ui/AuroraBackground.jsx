@@ -80,7 +80,7 @@ const AuroraBackground = ({ children, className = "", showStars = true }) => {
             y: [-50, 50, -50],
           })}
           transition={getAnimationTransition(25)}
-          className="absolute left-[10%] top-[20%] h-[400px] w-[400px] rounded-full bg-indigo-500/20 blur-[100px] dark:bg-indigo-400/30"
+          className="absolute left-[10%] top-[20%] h-[400px] w-[400px] rounded-full bg-indigo-400/30 blur-[100px] dark:bg-indigo-400/30"
           style={{ willChange: shouldReduceMotion ? "auto" : "transform, opacity" }}
         />
 
@@ -93,7 +93,7 @@ const AuroraBackground = ({ children, className = "", showStars = true }) => {
             y: [60, -40, 60],
           })}
           transition={getAnimationTransition(30, 2)}
-          className="absolute right-[15%] top-[10%] h-[500px] w-[500px] rounded-full bg-violet-500/15 blur-[120px] dark:bg-violet-400/25"
+          className="absolute right-[15%] top-[10%] h-[500px] w-[500px] rounded-full bg-violet-400/25 blur-[120px] dark:bg-violet-400/25"
           style={{ willChange: shouldReduceMotion ? "auto" : "transform, opacity" }}
         />
 
@@ -106,7 +106,7 @@ const AuroraBackground = ({ children, className = "", showStars = true }) => {
             y: [80, -60, 80],
           })}
           transition={getAnimationTransition(28, 5)}
-          className="absolute bottom-[10%] left-[20%] h-[450px] w-[450px] rounded-full bg-cyan-500/15 blur-[110px] dark:bg-cyan-400/20"
+          className="absolute bottom-[10%] left-[20%] h-[450px] w-[450px] rounded-full bg-cyan-400/25 blur-[110px] dark:bg-cyan-400/20"
           style={{ willChange: shouldReduceMotion ? "auto" : "transform, opacity" }}
         />
 
@@ -119,7 +119,7 @@ const AuroraBackground = ({ children, className = "", showStars = true }) => {
             y: [-70, 90, -70],
           })}
           transition={getAnimationTransition(32, 8)}
-          className="absolute bottom-[20%] right-[10%] h-[380px] w-[380px] rounded-full bg-blue-500/15 blur-[100px] dark:bg-blue-400/25"
+          className="absolute bottom-[20%] right-[10%] h-[380px] w-[380px] rounded-full bg-blue-400/25 blur-[100px] dark:bg-blue-400/25"
           style={{ willChange: shouldReduceMotion ? "auto" : "transform, opacity" }}
         />
 
@@ -147,7 +147,7 @@ const AuroraBackground = ({ children, className = "", showStars = true }) => {
                         delay: star.delay,
                       }
                 }
-                className="absolute rounded-full bg-slate-300/40 dark:bg-slate-400/30"
+                className="absolute rounded-full bg-slate-400/50 dark:bg-slate-400/30"
                 style={{
                   left: `${star.x}%`,
                   top: `${star.y}%`,

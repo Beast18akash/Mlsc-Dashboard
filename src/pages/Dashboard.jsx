@@ -102,16 +102,16 @@ const Dashboard = ({ activeView, onNavigate }) => {
             {activeView === "dashboard" && (
               <>
                 <section className="mb-8" aria-labelledby="dashboard-title">
-                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
-                    Dashboard overview
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+                    Dashboard Overview
                   </p>
                   <h1
                     id="dashboard-title"
-                    className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl"
+                    className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl"
                   >
                     MLSC Workshop &amp; Sponsor Console
                   </h1>
-                  <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400 sm:text-base">
+                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
                     Live overview of workshops, sponsors, registrations, and the
                     next upcoming session.
                   </p>

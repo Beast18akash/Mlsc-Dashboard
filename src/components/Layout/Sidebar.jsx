@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useWatchlistContext } from "../../context/WatchlistContext";
+import mlscLogo from "../../assets/mlsc_vcet_logo.jpg";
 
 /**
  * Sidebar
@@ -122,8 +123,13 @@ const Sidebar = ({ activeView, onNavigate, isMobileOpen, onMobileClose }) => {
     <>
       {/* ── Desktop sidebar (lg+) ─────────────────────────────────────── */}
       <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:flex lg:flex-col">
-        <div className="flex h-20 items-center border-b border-slate-200 px-6 dark:border-slate-700">
-          <div>
+        <div className="flex h-20 items-center gap-3 border-b border-slate-200 px-6 dark:border-slate-700">
+          <img 
+            src={mlscLogo} 
+            alt="MLSC Students Club logo" 
+            className="h-12 w-12 shrink-0 rounded-lg object-contain"
+          />
+          <div className="min-w-0">
             <p className="text-lg font-bold text-slate-900 dark:text-slate-100">MLSC</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">Workshop Console</p>
           </div>
@@ -152,9 +158,16 @@ const Sidebar = ({ activeView, onNavigate, isMobileOpen, onMobileClose }) => {
       >
         {/* Drawer header with close button */}
         <div className="flex h-16 items-center justify-between border-b border-slate-200 px-5 dark:border-slate-700">
-          <div>
-            <p className="text-base font-bold text-slate-900 dark:text-slate-100">MLSC</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Workshop Console</p>
+          <div className="flex items-center gap-2.5">
+            <img 
+              src={mlscLogo} 
+              alt="MLSC Students Club logo" 
+              className="h-10 w-10 shrink-0 rounded-lg object-contain"
+            />
+            <div className="min-w-0">
+              <p className="text-base font-bold text-slate-900 dark:text-slate-100">MLSC</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Workshop Console</p>
+            </div>
           </div>
           <button
             ref={closeButtonRef}
