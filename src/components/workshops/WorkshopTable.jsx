@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Eye, Pencil, CheckCircle2, SearchX } from "lucide-react";
+import { Eye, Pencil, CheckCircle2, SearchX, Heart } from "lucide-react";
 
 import { useNotifications } from "../../context/NotificationContext";
+import { useWatchlistContext } from "../../context/WatchlistContext";
 import { sponsors } from "../../data/sponsors";
 import useWorkshopFilters from "../../hooks/useWorkshopFilters";
 import WorkshopControls from "./WorkshopControls";
@@ -40,6 +41,7 @@ const WorkshopTable = ({
   const sponsorList = sponsorsProp ?? sponsors;
 
   const { addNotification } = useNotifications();
+  const { isWatchlisted, toggleWatchlist } = useWatchlistContext();
 
   // ── Modal state ────────────────────────────────────────────────────────────
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
@@ -190,6 +192,7 @@ const WorkshopTable = ({
                 const sponsor = getSponsor(workshop.sponsorId);
                 const seatsRemaining = workshop.capacity - workshop.seatsFilled;
                 const isCompleted = workshop.status === "Completed";
+                const watchlisted = isWatchlisted(workshop.id);
 
                 return (
                   <tr
@@ -262,9 +265,10 @@ const WorkshopTable = ({
                       </span>
                     </td>
 
-                    {/* Actions — Feature 3 rules preserved */}
+                    {/* Actions */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-1">
+                        {/* View — always visible */}
                         <button
                           type="button"
                           className={actionButtonClassName}
@@ -275,6 +279,7 @@ const WorkshopTable = ({
                           <Eye size={17} aria-hidden="true" />
                         </button>
 
+                        {/* Edit — hidden for completed (Feature 3) */}
                         {!isCompleted && (
                           <button
                             type="button"
@@ -287,6 +292,7 @@ const WorkshopTable = ({
                           </button>
                         )}
 
+                        {/* Mark Completed — hidden for completed (Feature 3) */}
                         {!isCompleted && (
                           <button
                             type="button"
@@ -298,6 +304,36 @@ const WorkshopTable = ({
                             <CheckCircle2 size={17} aria-hidden="true" />
                           </button>
                         )}
+
+                        {/* Interested / Watchlist toggle — always visible */}
+                        <button
+                          type="button"
+                          onClick={() => toggleWatchlist(workshop.id)}
+                          title={
+                            watchlisted
+                              ? "Remove from Watchlist"
+                              : "Add to Watchlist"
+                          }
+                          aria-label={
+                            watchlisted
+                              ? `Remove ${workshop.title} from watchlist`
+                              : `Add ${workshop.title} to watchlist`
+                          }
+                          aria-pressed={watchlisted}
+                          className={`rounded-lg p-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 ${
+                            watchlisted
+                              ? "text-rose-500 hover:bg-rose-50 hover:text-rose-600"
+                              : "text-slate-500 hover:bg-slate-100 hover:text-rose-500"
+                          }`}
+                        >
+                          <Heart
+                            size={17}
+                            aria-hidden="true"
+                            className={
+                              watchlisted ? "fill-rose-500" : "fill-none"
+                            }
+                          />
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -5,29 +5,48 @@ import {
   Users,
   Handshake,
 } from "lucide-react";
+import { useWatchlistContext } from "../../context/WatchlistContext";
 
-const Sidebar = () => {
+/**
+ * Sidebar
+ *
+ * Props:
+ *   activeView : "dashboard" | "workshops" | "watchlist"
+ *   onNavigate : (view: string) => void
+ *
+ * Each nav item has its own unique `view` key so highlights are unambiguous.
+ * Unimplemented items (Registrations, Sponsors) are visually muted and
+ * non-interactive until those features are built.
+ */
+const Sidebar = ({ activeView, onNavigate }) => {
+  const { watchlistCount } = useWatchlistContext();
+
   const navigationItems = [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
-      active: true,
+      view: "dashboard",
     },
     {
       label: "Workshops",
       icon: CalendarDays,
+      view: "workshops",
     },
     {
       label: "My Watchlist",
       icon: Heart,
+      view: "watchlist",
+      badge: watchlistCount > 0 ? watchlistCount : null,
     },
     {
       label: "Registrations",
       icon: Users,
+      view: null, // Feature 6 — not yet implemented
     },
     {
       label: "Sponsors",
       icon: Handshake,
+      view: null, // future feature
     },
   ];
 
@@ -40,21 +59,41 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1 p-4">
+      <nav className="flex-1 space-y-1 p-4" aria-label="Main navigation">
         {navigationItems.map((item) => {
           const Icon = item.icon;
+          const isActiveItem = item.view ? activeView === item.view : false;
 
           return (
             <button
               key={item.label}
+              onClick={() => item.view && onNavigate(item.view)}
+              disabled={!item.view}
+              aria-current={isActiveItem ? "page" : undefined}
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
-                item.active
+                isActiveItem
                   ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  : item.view
+                  ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  : "cursor-not-allowed text-slate-400"
               }`}
             >
-              <Icon size={19} />
-              <span>{item.label}</span>
+              <Icon size={19} aria-hidden="true" />
+              <span className="flex-1 text-left">{item.label}</span>
+
+              {/* Watchlist count badge */}
+              {item.badge != null && (
+                <span
+                  className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold tabular-nums ${
+                    isActiveItem
+                      ? "bg-white/20 text-white"
+                      : "bg-rose-100 text-rose-700"
+                  }`}
+                  aria-label={`${item.badge} watchlisted`}
+                >
+                  {item.badge}
+                </span>
+              )}
             </button>
           );
         })}
