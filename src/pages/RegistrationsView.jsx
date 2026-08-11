@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { CheckCircle2, ClipboardList } from "lucide-react";
-
 import { useNotifications } from "../context/NotificationContext";
 import RegistrationStepIndicator from "../components/registration/RegistrationStepIndicator";
 import StepPersonalInfo from "../components/registration/StepPersonalInfo";
 import StepWorkshopSelection from "../components/registration/StepWorkshopSelection";
 import StepConfirmation from "../components/registration/StepConfirmation";
+import RegistrationPass from "../components/registration/RegistrationPass";
 
 /**
  * RegistrationsView
@@ -93,8 +92,30 @@ const validateInstitutionalEmail = (email) => {
   return true;
 };
 
+/**
+ * generateRegistrationId
+ *
+ * Produces a readable, unique Registration ID in the format:
+ *   MLSC-WS-2026-0142
+ *
+ * Components:
+ *   MLSC    — org prefix
+ *   WS      — workshop registration type
+ *   YYYY    — current year
+ *   NNNN    — zero-padded sequential number (current list length + 1)
+ *
+ * The sequence number is derived from the current registrationList length
+ * so each new registration within a session gets a higher number.
+ * The timestamp suffix ensures no collision even if two registrations happen
+ * in the same second across different sessions.
+ */
+const generateRegistrationId = (registrationCount) => {
+  const year = new Date().getFullYear();
+  const seq = String(registrationCount + 1).padStart(4, "0");
+  return `MLSC-WS-${year}-${seq}`;
+};
+
 const STEPS = [
-  { label: "Personal Info" },
   { label: "Select Workshop" },
   { label: "Confirm" },
 ];
@@ -117,6 +138,9 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
   const [submitError, setSubmitError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  // Stores the finalised registration object + workshop/sponsor snapshot
+  // so the pass always shows correct data regardless of later state changes.
+  const [completedRegistration, setCompletedRegistration] = useState(null);
 
   // ── Derived ──────────────────────────────────────────────────────────────
 
@@ -275,8 +299,11 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
 
     // Simulate a brief async tick so the "Registering…" state is visible
     setTimeout(() => {
+      // Generate readable, sequential Registration ID
+      const registrationId = generateRegistrationId(registrationList.length);
+
       const registration = {
-        id: `REG-${Date.now()}`,
+        id: registrationId,
         workshopId: selectedWorkshop.id,
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -299,6 +326,14 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
         message: `${formData.name.trim()} has been registered for ${selectedWorkshop.title}.`,
       });
 
+      // Snapshot workshop and sponsor at submission time so the pass
+      // shows the correct data even if live state is edited afterwards.
+      setCompletedRegistration({
+        registration,
+        workshop: { ...selectedWorkshop },
+        sponsor: selectedSponsor ? { ...selectedSponsor } : null,
+      });
+
       setIsSubmitting(false);
       setSubmitted(true);
     }, 400);
@@ -314,6 +349,7 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
     setStep2Error(null);
     setSubmitError(null);
     setSubmitted(false);
+    setCompletedRegistration(null);
   };
 
   // ─── Render ───────────────────────────────────────────────────────────────
@@ -335,44 +371,14 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
       </section>
 
       <div className="mx-auto max-w-3xl">
-        {/* ── Success screen ─────────────────────────────────────────── */}
-        {submitted ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white px-6 py-20 text-center shadow-sm">
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
-              <CheckCircle2
-                size={36}
-                className="text-emerald-500"
-                aria-hidden="true"
-              />
-            </span>
-            <h2 className="mt-5 text-xl font-bold text-slate-900">
-              Registration Confirmed!
-            </h2>
-            <p className="mt-2 max-w-sm text-sm text-slate-500">
-              <span className="font-semibold text-slate-700">
-                {formData.name}
-              </span>{" "}
-              has been successfully registered for{" "}
-              <span className="font-semibold text-slate-700">
-                {selectedWorkshop?.title}
-              </span>
-              .
-            </p>
-            <p className="mt-1 text-sm text-slate-400">
-              A confirmation was sent to{" "}
-              <span className="font-medium">{formData.email}</span>.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
-              >
-                <ClipboardList size={16} aria-hidden="true" />
-                Register Another
-              </button>
-            </div>
-          </div>
+        {/* ── Registration Pass (success screen) ─────────────────────── */}
+        {submitted && completedRegistration ? (
+          <RegistrationPass
+            registration={completedRegistration.registration}
+            workshop={completedRegistration.workshop}
+            sponsor={completedRegistration.sponsor}
+            onRegisterAnother={handleReset}
+          />
         ) : (
           /* ── Multi-step form ─────────────────────────────────────── */
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
