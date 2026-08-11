@@ -21,32 +21,34 @@ const Dashboard = () => {
 
         <main className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">
-            <div className="mb-8">
-              <p className="text-sm font-medium text-slate-500">Overview</p>
+            <section className="mb-8" aria-labelledby="dashboard-title">
+              <p className="text-sm font-semibold text-slate-600">
+                Dashboard overview
+              </p>
 
-              <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                Welcome to MLSC
-              </h2>
+              <h1
+                id="dashboard-title"
+                className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+              >
+                MLSC Workshop & Sponsor Console
+              </h1>
 
               <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
-                Manage workshops, sponsors, registrations, and attendee activity
-                from one place.
+                Live overview of workshops, sponsors, registrations, and the
+                next upcoming session.
               </p>
-            </div>
+            </section>
 
             <MetricsGrid
+              workshops={workshops}
               totalWorkshops={totalWorkshops}
               totalSponsors={totalSponsors}
               totalAttendees={totalAttendees}
-              nextWorkshop="Coming Soon"
             />
 
-<div className="mt-8">
-  <WorkshopTable
-    workshops={workshops}
-    sponsors={sponsors}
-  />
-</div>
+            <div className="mt-8">
+              <WorkshopTable workshops={workshops} sponsors={sponsors} />
+            </div>
           </div>
         </main>
       </div>
