@@ -5,6 +5,7 @@ import WorkshopTable from "../components/workshops/WorkshopTable";
 
 import Sidebar from "../components/Layout/Sidebar";
 import Header from "../components/Layout/Header";
+import AlertBar from "../components/notifications/AlertBar";
 import MetricsGrid from "../components/dashboard/MetricsGrid";
 
 const Dashboard = () => {
@@ -18,6 +19,10 @@ const Dashboard = () => {
 
       <div className="min-w-0 flex-1">
         <Header />
+
+        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 lg:px-8">
+          <AlertBar />
+        </div>
 
         <main className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">
