@@ -2,11 +2,12 @@ import { useCallback, useState } from "react";
 
 import { workshops as initialWorkshops } from "../data/workshops";
 import { sponsors } from "../data/sponsors";
-import { registrations } from "../data/registrations";
+import { registrations as initialRegistrations } from "../data/registrations";
 
 import WorkshopPreview from "../components/dashboard/WorkshopPreview";
 import WorkshopsView from "./WorkshopsView";
 import WatchlistView from "./WatchlistView";
+import RegistrationsView from "./RegistrationsView";
 import Sidebar from "../components/Layout/Sidebar";
 import Header from "../components/Layout/Header";
 import AlertBar from "../components/notifications/AlertBar";
@@ -15,52 +16,65 @@ import MetricsGrid from "../components/dashboard/MetricsGrid";
 /**
  * Dashboard
  *
- * Single source of truth for the live workshop list (Features 3–5).
+ * Single source of truth for:
+ *   workshopList     — live workshop state (Features 3–5)
+ *   registrationList — live registration state (Feature 6)
+ *
  * Receives activeView + onNavigate from App; renders the correct view.
  *
  * Views:
- *   "dashboard"  — overview: metrics + limited WorkshopPreview
- *   "workshops"  — full WorkshopsView with all 14 workshops + F4 controls
- *   "watchlist"  — WatchlistView (watchlisted workshops only)
+ *   "dashboard"     — overview: metrics + limited WorkshopPreview
+ *   "workshops"     — full WorkshopsView with all workshops + F4 controls
+ *   "watchlist"     — WatchlistView (watchlisted workshops only)
+ *   "registrations" — RegistrationsView (3-step registration flow)
  *
  * Props:
- *   activeView : "dashboard" | "workshops" | "watchlist"
+ *   activeView : "dashboard" | "workshops" | "watchlist" | "registrations"
  *   onNavigate : (view: string) => void
  */
 const Dashboard = ({ activeView, onNavigate }) => {
+  // ── Workshop state (Features 3–5) ─────────────────────────────────────────
   const [workshopList, setWorkshopList] = useState(initialWorkshops);
-
-  const totalWorkshops = workshopList.length;
-  const totalSponsors = sponsors.length;
-  const totalAttendees = registrations.length;
 
   const updateWorkshop = useCallback((workshopId, updates) => {
     setWorkshopList((current) =>
-      current.map((workshop) =>
-        workshop.id === workshopId
-          ? { ...workshop, ...updates }
-          : workshop,
+      current.map((w) =>
+        w.id === workshopId ? { ...w, ...updates } : w,
       ),
     );
   }, []);
 
   const markWorkshopCompleted = useCallback((workshopId) => {
     setWorkshopList((current) =>
-      current.map((workshop) =>
-        workshop.id === workshopId
-          ? { ...workshop, status: "Completed" }
-          : workshop,
+      current.map((w) =>
+        w.id === workshopId ? { ...w, status: "Completed" } : w,
       ),
     );
   }, []);
 
-  // Common props forwarded to every view that renders WorkshopTable
+  // ── Registration state (Feature 6) ────────────────────────────────────────
+  // Initialised from registrations.js but never mutates that file.
+  // New registrations are appended immutably so the attendee count stays live.
+  const [registrationList, setRegistrationList] = useState(initialRegistrations);
+
+  const addRegistration = useCallback((registration) => {
+    setRegistrationList((current) => [...current, registration]);
+  }, []);
+
+  // ── Derived metrics ───────────────────────────────────────────────────────
+  const totalWorkshops = workshopList.length;
+  const totalSponsors = sponsors.length;
+  const totalAttendees = registrationList.length;
+
+  // ── Shared workshop table props ───────────────────────────────────────────
   const tableProps = {
     workshopList,
     sponsors,
     onUpdateWorkshop: updateWorkshop,
     onMarkCompleted: markWorkshopCompleted,
   };
+
+  // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
     <div className="flex min-h-screen bg-slate-50">
@@ -120,6 +134,17 @@ const Dashboard = ({ activeView, onNavigate }) => {
             {/* ── My Watchlist ────────────────────────────────────────── */}
             {activeView === "watchlist" && (
               <WatchlistView {...tableProps} />
+            )}
+
+            {/* ── Registrations ───────────────────────────────────────── */}
+            {activeView === "registrations" && (
+              <RegistrationsView
+                workshopList={workshopList}
+                sponsors={sponsors}
+                registrationList={registrationList}
+                onAddRegistration={addRegistration}
+                onUpdateWorkshop={updateWorkshop}
+              />
             )}
 
           </div>

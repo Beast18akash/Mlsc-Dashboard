@@ -11,12 +11,11 @@ import { useWatchlistContext } from "../../context/WatchlistContext";
  * Sidebar
  *
  * Props:
- *   activeView : "dashboard" | "workshops" | "watchlist"
+ *   activeView : "dashboard" | "workshops" | "watchlist" | "registrations"
  *   onNavigate : (view: string) => void
  *
- * Each nav item has its own unique `view` key so highlights are unambiguous.
- * Unimplemented items (Registrations, Sponsors) are visually muted and
- * non-interactive until those features are built.
+ * Each nav item has its own unique view key. Unimplemented items (Sponsors)
+ * are visually muted and non-interactive.
  */
 const Sidebar = ({ activeView, onNavigate }) => {
   const { watchlistCount } = useWatchlistContext();
@@ -41,7 +40,7 @@ const Sidebar = ({ activeView, onNavigate }) => {
     {
       label: "Registrations",
       icon: Users,
-      view: null, // Feature 6 — not yet implemented
+      view: "registrations",
     },
     {
       label: "Sponsors",

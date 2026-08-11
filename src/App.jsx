@@ -10,9 +10,10 @@ import Dashboard from "./pages/Dashboard";
  * area can all read and update it without prop-drilling through Dashboard.
  *
  * Views:
- *   "dashboard"  — overview: live metrics + upcoming workshop preview
- *   "workshops"  — full workshop management table with F4 search/filter/sort
- *   "watchlist"  — My Watchlist (watchlisted workshops only)
+ *   "dashboard"     — overview: live metrics + upcoming workshop preview
+ *   "workshops"     — full workshop management table with F4 search/filter/sort
+ *   "watchlist"     — My Watchlist (watchlisted workshops only)
+ *   "registrations" — 3-step workshop registration flow (Feature 6)
  */
 function App() {
   const [activeView, setActiveView] = useState("dashboard");
