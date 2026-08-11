@@ -59,7 +59,7 @@ const StepConfirmation = ({
           </p>
           <div className="divide-y divide-slate-100">
             <SummaryRow icon={User} label="Full Name" value={formData.name} />
-            <SummaryRow icon={Mail} label="Email" value={formData.email} />
+            <SummaryRow icon={Mail} label="Academic Email" value={formData.email} />
             <SummaryRow icon={GraduationCap} label="Year of Study" value={formData.year} />
             <SummaryRow icon={Building2} label="Department" value={formData.department} />
           </div>

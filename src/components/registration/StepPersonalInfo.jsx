@@ -80,7 +80,7 @@ const StepPersonalInfo = ({ formData, onChange, onNext, errors }) => {
         {/* Academic Email */}
         <div className="sm:col-span-2">
           <label htmlFor="reg-email" className={labelClass}>
-            Email Address{" "}
+            Academic Email{" "}
             <span className="text-red-500" aria-hidden="true">*</span>
           </label>
           <input
@@ -89,14 +89,26 @@ const StepPersonalInfo = ({ formData, onChange, onNext, errors }) => {
             autoComplete="email"
             value={formData.email}
             onChange={(e) => onChange("email", e.target.value)}
-            placeholder="e.g. yourname@gmail.com"
+            placeholder="e.g. yourname@university.edu"
             aria-required="true"
-            aria-describedby={errors.email ? "reg-email-error" : undefined}
+            aria-describedby={
+              errors.email
+                ? "reg-email-error"
+                : "reg-email-hint"
+            }
             className={`${inputClass} ${errors.email ? inputError : inputNormal}`}
           />
-          {errors.email && (
+          {errors.email ? (
             <p id="reg-email-error" role="alert" className={errorClass}>
               {errors.email}
+            </p>
+          ) : (
+            <p id="reg-email-hint" className="mt-1.5 text-xs text-slate-400">
+              Must be an institutional address — e.g.{" "}
+              <span className="font-medium text-slate-500">@university.edu</span>{" "}
+              or{" "}
+              <span className="font-medium text-slate-500">@college.ac.in</span>.
+              Personal emails (Gmail, Outlook, etc.) are not accepted.
             </p>
           )}
         </div>

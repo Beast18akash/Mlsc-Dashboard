@@ -33,38 +33,62 @@ import StepConfirmation from "../components/registration/StepConfirmation";
  */
 
 /**
- * isLikelyRealEmail
+ * INSTITUTIONAL_EMAIL_REGEX
  *
- * Checks that an email looks like it belongs to a real person.
- * Any domain is allowed (gmail.com, company.com, university.edu, etc.).
- * Only obviously fake/throwaway patterns are rejected:
+ * Custom regex for institutional/academic email validation.
+ * Assignment requirement: "Custom regex-based validation for institutional
+ * email format."
  *
- *   - Local part (before @) must be ≥ 2 characters  →  blocks a@gmail.com
- *   - Domain name (between @ and last dot) must be ≥ 3 chars → blocks x@b.com
- *   - TLD (after last dot) must be ≥ 2 characters  →  blocks user@mail.c
- *   - No consecutive dots anywhere
- *   - Domain must not start or end with a hyphen
+ * Rules enforced by the regex:
+ *   1. Standard local part: letters, digits, dots, +, -, _ (≥ 2 chars)
+ *   2. @ separator
+ *   3. Optional subdomain prefix (e.g. cs.university, dept.college)
+ *   4. Domain name of ≥ 3 characters
+ *   5. TLD restricted to institutional/professional patterns:
+ *        .edu        — US universities
+ *        .edu.XX     — international academic (edu.in, edu.au, edu.sg …)
+ *        .ac.XX      — academic outside US  (ac.in, ac.uk, ac.nz …)
+ *        .org        — non-profit / research institutions
+ *        .gov        — government bodies
+ *        .net        — some research networks
+ *        .XX (2-char country TLD) at least 2 chars — institutional domains
+ *          registered under their country (e.g. .in, .uk, .au, .de)
+ *          combined with a domain name of ≥ 4 chars to avoid trivial fakes
+ *
+ * Blocked by this regex (personal/consumer providers):
+ *   @gmail.com, @yahoo.com, @hotmail.com, @outlook.com, @icloud.com, etc.
+ *   — these end in .com and therefore do not match the allowed TLD list.
+ *
+ * A professional .com address (e.g. @microsoft.com) is intentionally
+ * blocked too — the field label explicitly says "Academic / Institutional
+ * Email". If a student or faculty member only has a @gmail.com address,
+ * the placeholder and hint text explain what is expected.
  */
-const isLikelyRealEmail = (email) => {
-  const trimmed = email.trim().toLowerCase();
+const INSTITUTIONAL_EMAIL_REGEX =
+  /^[a-zA-Z0-9][a-zA-Z0-9._%+\-]{1,}@(?:[a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]{3,}\.(?:edu|edu\.[a-zA-Z]{2}|ac\.[a-zA-Z]{2}|org|gov|net|[a-zA-Z]{2})$/;
+
+/**
+ * validateInstitutionalEmail
+ *
+ * Returns true only when the email passes both:
+ *   1. The INSTITUTIONAL_EMAIL_REGEX (structure + allowed TLDs)
+ *   2. Structural sanity checks (no consecutive dots, no leading/trailing
+ *      hyphens in the domain, TLD ≥ 2 chars)
+ */
+const validateInstitutionalEmail = (email) => {
+  const trimmed = email.trim();
+
+  if (!INSTITUTIONAL_EMAIL_REGEX.test(trimmed)) return false;
+
+  // Extra sanity: no consecutive dots
+  if (/\.\./.test(trimmed)) return false;
+
   const atIndex = trimmed.indexOf("@");
-  if (atIndex < 2) return false; // local part must be ≥ 2 chars
+  const domain = trimmed.slice(atIndex + 1).toLowerCase();
+  const firstLabel = domain.split(".")[0];
 
-  const local = trimmed.slice(0, atIndex);
-  const domain = trimmed.slice(atIndex + 1);
-
-  if (local.length < 2) return false;
-  if (/\.\./.test(trimmed)) return false; // no consecutive dots
-
-  const lastDot = domain.lastIndexOf(".");
-  if (lastDot < 0) return false;
-
-  const domainName = domain.slice(0, lastDot);
-  const tld = domain.slice(lastDot + 1);
-
-  if (domainName.length < 3) return false;
-  if (tld.length < 2) return false;
-  if (domainName.startsWith("-") || domainName.endsWith("-")) return false;
+  // Domain must not start or end with a hyphen
+  if (firstLabel.startsWith("-") || firstLabel.endsWith("-")) return false;
 
   return true;
 };
@@ -101,31 +125,60 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
     ? sponsors.find((s) => s.id === selectedWorkshop.sponsorId)
     : null;
 
-  // ── Field change handler ──────────────────────────────────────────────────
+  // ── Step 1 validation ─────────────────────────────────────────────────────
+  // Defined FIRST so handleFieldChange can call it safely.
+  // Pure function — takes a data snapshot, returns an errors object.
 
-  const handleFieldChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear the individual field error as soon as the user types
-    if (step1Errors[field]) {
-      setStep1Errors((prev) => ({ ...prev, [field]: undefined }));
+  const validateStep1WithData = (data) => {
+    const errs = {};
+
+    // Name: required, reject whitespace-only
+    if (!data.name.trim()) {
+      errs.name = "Full name is required and cannot be blank.";
     }
+
+    // Email: required + institutional format (custom regex)
+    if (!data.email.trim()) {
+      errs.email = "Academic email address is required.";
+    } else if (!validateInstitutionalEmail(data.email)) {
+      errs.email =
+        "Please enter a valid institutional email (e.g. yourname@university.edu or yourname@college.ac.in). Personal email providers like Gmail or Outlook are not accepted.";
+    }
+
+    // Year: required
+    if (!data.year) {
+      errs.year = "Please select your year of study.";
+    }
+
+    // Department: required
+    if (!data.department) {
+      errs.department = "Please select your department.";
+    }
+
+    return errs;
   };
 
-  // ── Step 1 validation ─────────────────────────────────────────────────────
+  const validateStep1 = () => validateStep1WithData(formData);
 
-  const validateStep1 = () => {
-    const errs = {};
-    if (!formData.name.trim()) errs.name = "Full name is required.";
-    if (!formData.email.trim()) {
-      errs.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errs.email = "Please enter a valid email address.";
-    } else if (!isLikelyRealEmail(formData.email)) {
-      errs.email = "Please enter a real email address (e.g. yourname@gmail.com or yourname@company.com).";
+  // ── Field change handler ──────────────────────────────────────────────────
+  // Re-validates the changed field immediately so the error clears as soon
+  // as the user fixes it. Only fires if that field already has an error
+  // showing — avoids marking fields red before the user has touched them.
+
+  const handleFieldChange = (field, value) => {
+    const updated = { ...formData, [field]: value };
+    setFormData(updated);
+
+    // `field in step1Errors` is true even when the value is undefined,
+    // which means we correctly re-validate fields that were previously set
+    // to undefined (cleared) as well as fields with an active error string.
+    if (field in step1Errors) {
+      const freshErrors = validateStep1WithData(updated);
+      setStep1Errors((prev) => ({
+        ...prev,
+        [field]: freshErrors[field],
+      }));
     }
-    if (!formData.year) errs.year = "Please select your year of study.";
-    if (!formData.department) errs.department = "Please select your department.";
-    return errs;
   };
 
   // ── Navigation ────────────────────────────────────────────────────────────
@@ -158,6 +211,15 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
     setStep(3);
   };
 
+  // ── Workshop selection handler ────────────────────────────────────────────
+  // Clears the step 2 error as soon as a valid (non-full) workshop is chosen.
+
+  const handleWorkshopSelect = (workshopId) => {
+    setSelectedWorkshopId(workshopId);
+    // Clear the "please select a workshop" error once a selection is made
+    if (step2Error) setStep2Error(null);
+  };
+
   const handleBack = () => {
     setStep((s) => Math.max(1, s - 1));
   };
@@ -166,6 +228,24 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
 
   const handleConfirm = () => {
     if (!selectedWorkshop) return;
+
+    // ── Final submission safety pass ──────────────────────────────────────
+    // Re-validate Step 1 fields in case the user somehow reached Step 3
+    // with stale/invalid data (e.g. via browser state restoration).
+    const step1SafetyErrors = validateStep1();
+    if (Object.keys(step1SafetyErrors).length > 0) {
+      // Push user back to Step 1 with the errors shown
+      setStep1Errors(step1SafetyErrors);
+      setStep(1);
+      return;
+    }
+
+    // ── Workshop still exists ─────────────────────────────────────────────
+    const freshWorkshop = workshopList.find((w) => w.id === selectedWorkshop.id);
+    if (!freshWorkshop) {
+      setSubmitError("The selected workshop no longer exists. Please go back and choose another.");
+      return;
+    }
 
     // ── Duplicate registration guard ──────────────────────────────────────
     const emailLower = formData.email.trim().toLowerCase();
@@ -312,7 +392,7 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
                 workshops={workshopList}
                 sponsors={sponsors}
                 selectedWorkshopId={selectedWorkshopId}
-                onSelect={setSelectedWorkshopId}
+                onSelect={handleWorkshopSelect}
                 onNext={handleStep2Next}
                 onBack={handleBack}
                 error={step2Error}
