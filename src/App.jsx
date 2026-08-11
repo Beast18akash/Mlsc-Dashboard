@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { NotificationProvider } from "./context/NotificationContext";
 import { WatchlistProvider } from "./context/WatchlistContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Dashboard from "./pages/Dashboard";
 
 /**
  * App
  *
- * Owns top-level navigation state so Sidebar, Header, and the main content
- * area can all read and update it without prop-drilling through Dashboard.
+ * Provider order (outermost → innermost):
+ *   ThemeProvider       — applies dark class to <html>, no deps on other contexts
+ *   NotificationProvider
+ *   WatchlistProvider
+ *   Dashboard           — owns activeView navigation state
  *
  * Views:
  *   "dashboard"     — overview: live metrics + upcoming workshop preview
@@ -19,11 +23,13 @@ function App() {
   const [activeView, setActiveView] = useState("dashboard");
 
   return (
-    <NotificationProvider>
-      <WatchlistProvider>
-        <Dashboard activeView={activeView} onNavigate={setActiveView} />
-      </WatchlistProvider>
-    </NotificationProvider>
+    <ThemeProvider>
+      <NotificationProvider>
+        <WatchlistProvider>
+          <Dashboard activeView={activeView} onNavigate={setActiveView} />
+        </WatchlistProvider>
+      </NotificationProvider>
+    </ThemeProvider>
   );
 }
 

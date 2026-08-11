@@ -25,16 +25,16 @@ const WorkshopsView = ({
   return (
     <div>
       <section className="mb-6" aria-labelledby="workshops-title">
-        <p className="text-sm font-semibold text-slate-600">
+        <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
           Workshop management
         </p>
         <h1
           id="workshops-title"
-          className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+          className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl"
         >
           All Workshops
         </h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400 sm:text-base">
           Browse, search, filter, and manage all {workshopList.length}{" "}
           workshops. Use the controls below to find what you need.
         </p>

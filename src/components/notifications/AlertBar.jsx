@@ -1,37 +1,28 @@
 import { AlertTriangle, Info, X } from "lucide-react";
-
 import { useNotifications } from "../../context/NotificationContext";
 
 const typeStyles = {
   info: {
-    container: "border-blue-200 bg-blue-50 text-blue-900",
+    container: "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-200",
     icon: Info,
-    iconClass: "text-blue-600",
-    dismissClass:
-      "text-blue-700 hover:bg-blue-100 focus-visible:outline-blue-600",
+    iconClass: "text-blue-600 dark:text-blue-400",
+    dismissClass: "text-blue-700 hover:bg-blue-100 focus-visible:outline-blue-600 dark:text-blue-400 dark:hover:bg-blue-900/50",
   },
   warning: {
-    container: "border-amber-200 bg-amber-50 text-amber-900",
+    container: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200",
     icon: AlertTriangle,
-    iconClass: "text-amber-600",
-    dismissClass:
-      "text-amber-700 hover:bg-amber-100 focus-visible:outline-amber-600",
+    iconClass: "text-amber-600 dark:text-amber-400",
+    dismissClass: "text-amber-700 hover:bg-amber-100 focus-visible:outline-amber-600 dark:text-amber-400 dark:hover:bg-amber-900/50",
   },
 };
 
 const AlertBar = () => {
   const { notifications, dismissNotification } = useNotifications();
 
-  if (notifications.length === 0) {
-    return null;
-  }
+  if (notifications.length === 0) return null;
 
   return (
-    <div
-      className="space-y-2"
-      role="region"
-      aria-label="Global notifications"
-    >
+    <div className="space-y-2" role="region" aria-label="Global notifications">
       {notifications.map(({ id, type, message }) => {
         const styles = typeStyles[type] ?? typeStyles.info;
         const Icon = styles.icon;
@@ -42,16 +33,8 @@ const AlertBar = () => {
             className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${styles.container}`}
             role="alert"
           >
-            <Icon
-              className={`mt-0.5 shrink-0 ${styles.iconClass}`}
-              size={18}
-              aria-hidden="true"
-            />
-
-            <p className="min-w-0 flex-1 text-sm font-medium leading-5">
-              {message}
-            </p>
-
+            <Icon className={`mt-0.5 shrink-0 ${styles.iconClass}`} size={18} aria-hidden="true" />
+            <p className="min-w-0 flex-1 text-sm font-medium leading-5">{message}</p>
             <button
               type="button"
               onClick={() => dismissNotification(id)}

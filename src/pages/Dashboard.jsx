@@ -77,13 +77,13 @@ const Dashboard = ({ activeView, onNavigate }) => {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
       <Sidebar activeView={activeView} onNavigate={onNavigate} />
 
       <div className="min-w-0 flex-1">
         <Header activeView={activeView} onNavigate={onNavigate} />
 
-        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950 sm:px-6 lg:px-8">
           <AlertBar />
         </div>
 
@@ -94,16 +94,16 @@ const Dashboard = ({ activeView, onNavigate }) => {
             {activeView === "dashboard" && (
               <>
                 <section className="mb-8" aria-labelledby="dashboard-title">
-                  <p className="text-sm font-semibold text-slate-600">
+                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                     Dashboard overview
                   </p>
                   <h1
                     id="dashboard-title"
-                    className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+                    className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl"
                   >
                     MLSC Workshop &amp; Sponsor Console
                   </h1>
-                  <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
+                  <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400 sm:text-base">
                     Live overview of workshops, sponsors, registrations, and the
                     next upcoming session.
                   </p>

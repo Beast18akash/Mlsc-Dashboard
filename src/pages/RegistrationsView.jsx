@@ -358,14 +358,14 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
     <div>
       {/* Page heading */}
       <section className="mb-8" aria-labelledby="registrations-title">
-        <p className="text-sm font-semibold text-slate-600">Registrations</p>
+        <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Registrations</p>
         <h1
           id="registrations-title"
-          className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+          className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl"
         >
           Workshop Registration
         </h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400 sm:text-base">
           Register for an upcoming workshop in three simple steps.
         </p>
       </section>
@@ -381,7 +381,7 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
           />
         ) : (
           /* ── Multi-step form ─────────────────────────────────────── */
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-8">
             <RegistrationStepIndicator currentStep={step} steps={STEPS} />
 
             {step === 1 && (

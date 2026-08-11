@@ -4,7 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mlsc</title>
+    <title>MLSC Workshop Portal</title>
+    <!--
+      Flash-prevention script — runs synchronously before any CSS or JS
+      is parsed. Reads the saved theme from localStorage and immediately
+      adds the "dark" class to <html> so the first paint is correct.
+      Must be inline; an external script would load too late.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("mlsc-theme");
+          if (saved === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

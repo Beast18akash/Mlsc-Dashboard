@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/*
+  Tailwind v4 dark-mode configuration.
+  The "dark" variant applies when the <html> element has the "dark" class.
+  This is set/removed programmatically by ThemeContext.jsx.
+*/
+@variant dark (&:where(.dark, .dark *));
