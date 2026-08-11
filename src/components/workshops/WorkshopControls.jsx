@@ -1,0 +1,138 @@
+import { Search, X } from "lucide-react";
+
+const selectClassName =
+  "h-9 rounded-lg border border-slate-200 bg-white px-3 py-0 text-sm text-slate-700 shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 hover:border-slate-300";
+
+const SORT_OPTIONS = [
+  { value: "", label: "Default order" },
+  { value: "date-asc", label: "Date — earliest first" },
+  { value: "date-desc", label: "Date — latest first" },
+  { value: "seats-asc", label: "Seats remaining — fewest first" },
+  { value: "seats-desc", label: "Seats remaining — most first" },
+  { value: "title-asc", label: "Title A → Z" },
+];
+
+const STATUS_OPTIONS = ["Upcoming", "Ongoing", "Completed"];
+const MODE_OPTIONS = ["Online", "Offline"];
+
+/**
+ * WorkshopControls
+ *
+ * Renders the search input, filter selects, sort select and reset button.
+ * Owns no state — all values and change handlers are passed as props.
+ *
+ * Props:
+ *   controls        : { search, category, status, mode, sortBy }
+ *   categories      : string[]   — derived from live workshop list
+ *   hasActiveControls : boolean
+ *   onSearchChange  : (value: string) => void
+ *   onFilterChange  : (field: string, value: string) => void
+ *   onReset         : () => void
+ */
+const WorkshopControls = ({
+  controls,
+  categories,
+  hasActiveControls,
+  onSearchChange,
+  onFilterChange,
+  onReset,
+}) => {
+  const { search, category, status, mode, sortBy } = controls;
+
+  return (
+    <div className="border-b border-slate-200 bg-white px-5 py-4">
+      {/* Row 1 — search */}
+      <div className="relative">
+        <Search
+          size={15}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          aria-hidden="true"
+        />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search by title, speaker, or sponsor…"
+          aria-label="Search workshops"
+          className="h-9 w-full rounded-lg border border-slate-200 bg-white py-0 pl-9 pr-3 text-sm text-slate-900 shadow-sm transition-colors placeholder:text-slate-400 hover:border-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+        />
+      </div>
+
+      {/* Row 2 — filters + sort + reset */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        {/* Category */}
+        <select
+          value={category}
+          onChange={(e) => onFilterChange("category", e.target.value)}
+          aria-label="Filter by category"
+          className={selectClassName}
+        >
+          <option value="">All categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
+        {/* Status */}
+        <select
+          value={status}
+          onChange={(e) => onFilterChange("status", e.target.value)}
+          aria-label="Filter by status"
+          className={selectClassName}
+        >
+          <option value="">All statuses</option>
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+
+        {/* Mode */}
+        <select
+          value={mode}
+          onChange={(e) => onFilterChange("mode", e.target.value)}
+          aria-label="Filter by mode"
+          className={selectClassName}
+        >
+          <option value="">Online &amp; Offline</option>
+          {MODE_OPTIONS.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+
+        {/* Sort */}
+        <select
+          value={sortBy}
+          onChange={(e) => onFilterChange("sortBy", e.target.value)}
+          aria-label="Sort workshops"
+          className={selectClassName}
+        >
+          {SORT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+
+        {/* Reset — only visible when something is active */}
+        {hasActiveControls && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+          >
+            <X size={14} aria-hidden="true" />
+            Reset
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default WorkshopControls;

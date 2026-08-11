@@ -45,12 +45,12 @@ const WorkshopDetailsModal = ({ workshop, sponsor, isOpen, onClose }) => {
           label="Seats Filled"
           value={`${workshop.seatsFilled} / ${workshop.capacity}`}
         />
-        <DetailItem
-          label="Seats Remaining"
-          value={
-            seatsRemaining <= 0 ? "Full" : `${seatsRemaining} remaining`
-          }
-        />
+        {workshop.status !== "Completed" && (
+          <DetailItem
+            label="Seats Remaining"
+            value={seatsRemaining <= 0 ? "Full" : `${seatsRemaining} remaining`}
+          />
+        )}
         <DetailItem label="Status">
           <span
             className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${
