@@ -9,7 +9,7 @@ const statusStyles = {
   Completed:"bg-slate-100 text-slate-600 ring-slate-500/20 dark:bg-slate-700 dark:text-slate-400 dark:ring-slate-500/30",
 };
 
-const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
+const WorkshopPreview = ({ workshops, sponsors, onViewAll, onRegister }) => {
   const { isWatchlisted } = useWatchlistContext();
   const getSponsor = (sponsorId) => sponsors.find((s) => s.id === sponsorId);
 
@@ -197,20 +197,40 @@ const WorkshopPreview = ({ workshops, sponsors, onViewAll }) => {
                   </div>
 
                   {/* Footer */}
-                  <div className="border-t border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-800/50 dark:bg-slate-800/30">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-slate-900 dark:text-white">
-                        {workshop.seatsFilled}/{workshop.capacity}
-                      </span>
-                      <span
-                        className={`font-medium ${
-                          isFull
-                            ? "text-red-600 dark:text-red-400"
-                            : "text-slate-600 dark:text-slate-400"
-                        }`}
-                      >
-                        {isFull ? "Full" : `${seatsRemaining} left`}
-                      </span>
+                  <div className="border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800/50 dark:bg-slate-800/30">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="font-semibold text-slate-900 dark:text-white">
+                          {workshop.seatsFilled}/{workshop.capacity}
+                        </span>
+                        <span
+                          className={`font-medium ${
+                            isFull
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-slate-600 dark:text-slate-400"
+                          }`}
+                        >
+                          {isFull ? "Full" : `${seatsRemaining} left`}
+                        </span>
+                      </div>
+                      
+                      {/* Register CTA */}
+                      {workshop.status !== "Completed" && (
+                        isFull ? (
+                          <span className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-400">
+                            Fully Booked
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => onRegister(workshop.id)}
+                            className="btn-gradient-cta inline-flex items-center gap-1 px-3 py-1.5 text-xs"
+                          >
+                            <span>Register</span>
+                            <ArrowRight size={12} aria-hidden="true" />
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>

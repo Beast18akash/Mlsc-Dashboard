@@ -59,6 +59,9 @@ const Dashboard = ({ activeView, onNavigate }) => {
   // ── Mobile navigation state ───────────────────────────────────────────────
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
+  // ── Preselected workshop for registration ─────────────────────────────────
+  const [preselectedWorkshopId, setPreselectedWorkshopId] = useState(null);
+
   // ── Derived metrics ───────────────────────────────────────────────────────
   const totalWorkshops = workshopList.length;
   const totalSponsors = sponsors.length;
@@ -71,6 +74,12 @@ const Dashboard = ({ activeView, onNavigate }) => {
     onUpdateWorkshop: updateWorkshop,
     onMarkCompleted: markWorkshopCompleted,
   };
+
+  // ── Handle registration navigation with preselected workshop ──────────────
+  const handleRegisterWorkshop = useCallback((workshopId) => {
+    setPreselectedWorkshopId(workshopId);
+    onNavigate("registrations");
+  }, [onNavigate]);
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
@@ -129,6 +138,7 @@ const Dashboard = ({ activeView, onNavigate }) => {
                     workshops={workshopList}
                     sponsors={sponsors}
                     onViewAll={() => onNavigate("workshops")}
+                    onRegister={handleRegisterWorkshop}
                   />
                 </div>
               </>
@@ -152,6 +162,8 @@ const Dashboard = ({ activeView, onNavigate }) => {
                 registrationList={registrationList}
                 onAddRegistration={addRegistration}
                 onUpdateWorkshop={updateWorkshop}
+                preselectedWorkshopId={preselectedWorkshopId}
+                onClearPreselection={() => setPreselectedWorkshopId(null)}
               />
             )}
 

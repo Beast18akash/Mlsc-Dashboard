@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNotifications } from "../context/NotificationContext";
 import RegistrationStepIndicator from "../components/registration/RegistrationStepIndicator";
 import StepPersonalInfo from "../components/registration/StepPersonalInfo";
@@ -128,12 +128,20 @@ const INITIAL_FORM = {
   department: "",
 };
 
-const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegistration, onUpdateWorkshop }) => {
+const RegistrationsView = ({ 
+  workshopList, 
+  sponsors, 
+  registrationList, 
+  onAddRegistration, 
+  onUpdateWorkshop,
+  preselectedWorkshopId = null,
+  onClearPreselection = null
+}) => {
   const { addNotification } = useNotifications();
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM);
-  const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState(preselectedWorkshopId || "");
   const [step1Errors, setStep1Errors] = useState({});
   const [step2Error, setStep2Error] = useState(null);
   const [submitError, setSubmitError] = useState(null);
@@ -142,6 +150,17 @@ const RegistrationsView = ({ workshopList, sponsors, registrationList, onAddRegi
   // Stores the finalised registration object + workshop/sponsor snapshot
   // so the pass always shows correct data regardless of later state changes.
   const [completedRegistration, setCompletedRegistration] = useState(null);
+
+  // ── Effect: Apply preselected workshop and clear after use ───────────────
+  useEffect(() => {
+    if (preselectedWorkshopId && preselectedWorkshopId !== selectedWorkshopId) {
+      setSelectedWorkshopId(preselectedWorkshopId);
+      // Clear the preselection so it doesn't persist on return visits
+      if (onClearPreselection) {
+        onClearPreselection();
+      }
+    }
+  }, [preselectedWorkshopId, selectedWorkshopId, onClearPreselection]);
 
   // ── Derived ──────────────────────────────────────────────────────────────
 
