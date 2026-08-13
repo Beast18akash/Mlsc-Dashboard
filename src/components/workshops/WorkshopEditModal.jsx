@@ -17,10 +17,20 @@ const WorkshopEditModal = ({ workshop, sponsors, isOpen, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.title?.trim())           { setError("Title is required."); return; }
-    if (form.capacity <= 0)            { setError("Capacity must be greater than zero."); return; }
-    if (form.seatsFilled < 0)          { setError("Seats filled cannot be negative."); return; }
+    if (!form.title?.trim())              { setError("Title is required."); return; }
+    if (form.capacity <= 0)               { setError("Capacity must be greater than zero."); return; }
+    if (form.seatsFilled < 0)             { setError("Seats filled cannot be negative."); return; }
     if (form.seatsFilled > form.capacity) { setError("Seats filled cannot exceed capacity."); return; }
+
+    // Prevent setting the workshop date to a past date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const pickedDate = new Date(form.date);
+    if (pickedDate < today) {
+      setError("Workshop date cannot be set to a past date.");
+      return;
+    }
+
     const { id, ...updates } = form;
     onSave(id, updates);
     onClose();
@@ -43,7 +53,9 @@ const WorkshopEditModal = ({ workshop, sponsors, isOpen, onClose, onSave }) => {
           </div>
           <div>
             <label htmlFor="workshop-date" className={labelCls}>Date</label>
-            <input id="workshop-date" type="date" value={form.date} onChange={handleChange("date")} required className={inputCls} />
+            <input id="workshop-date" type="date" value={form.date} onChange={handleChange("date")} required
+              min={new Date().toISOString().split("T")[0]}
+              className={inputCls} />
           </div>
           <div>
             <label htmlFor="workshop-time" className={labelCls}>Time</label>
